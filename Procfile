@@ -1,1 +1,1 @@
-web: gunicorn BreathCoderWeb:app
+web: gunicorn BreathCoder:app
