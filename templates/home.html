@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BreathCoder AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-900 text-white min-h-screen flex flex-col">
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 hover:ring-2">
+        <nav class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 hover:cursor-pointer">
+               <a href="/" target="_blank"> <span class="text-lg md:text-xl font-bold tracking-tight text-blue-400">BreathCoder AI</span></a>
+            </div>
+
+            <ul class="flex space-x-4 md:space-x-12 font-semibold text-xs md:text-sm font-medium text-slate-300">
+                <li><a href="/" target="_blank" class="hover:text-blue-400 transition">Home</a></li>
+                <li><a href="/about" target="_blank" class="hover:text-blue-400 transition">About</a></li>
+                <li><a href="/contact" target="_blank" class="hover:text-blue-400 transition">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="flex-grow flex flex-col items-center justify-center p-4 md:p-8">
+        <div id="infoSection" class="max-w-4xl w-full text-center animate-fade-in">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">
+                Detect Lung Health with <span class="text-blue-400">BreathCoder AI</span>
+            </h2>
+            
+            <p class="text-slate-400 text-base md:text-lg mb-8 md:mb-12 leading-relaxed px-2 md:px-0">
+                Our advanced neural network analyzes the sound of your exhalation to detect early signs of
+                COPD and airway obstruction. Fast, non-invasive, and powered by Machine Learning.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10 text-left">
+                <div class="bg-slate-800/50 p-6 md:p-7 rounded-2xl border border-slate-700 hover:shadow-2xl hover:ring-2 transition-all">
+                    <h3 class="font-bold mb-1">Fast Result</h3>
+                    <p class="text-sm text-slate-500">Get clinical-grade insights in under 10 seconds.</p>
+                </div>
+                <div class="bg-slate-800/50 p-6 md:p-7 rounded-2xl border border-slate-700 hover:ring-2 transition-all">
+                    <h3 class="font-bold mb-1">AI Powered</h3>
+                    <p class="text-sm text-slate-500">Utilizes MLP Classifiers trained on pulmonary datasets.</p>
+                </div>
+                <div class="bg-slate-800/50 p-6 md:p-7 rounded-2xl border border-slate-700 hover:ring-2 transition-all">
+                    <h3 class="font-bold mb-1">Pre-COPD Detection</h3>
+                    <p class="text-sm text-slate-500">Detects early obstruction before symptoms appear.</p>
+                </div>
+                <div class="bg-slate-800/50 p-6 md:p-7 rounded-2xl border border-slate-700 hover:ring-2 transition-all">
+                    <h3 class="font-bold mb-1">Explainable AI</h3>
+                    <p class="text-sm text-slate-500">Identifies specific physiological reasons for the risk score.</p>
+                </div>
+            </div>
+
+            <a href="/copd">
+                <button id="checkCopiBtn"
+                    class="w-full sm:w-auto bg-slate-800/50 ring-1 ring-blue-600/50 hover:bg-blue-500 text-white text-lg md:text-xl font-bold px-10 py-4 rounded-2xl shadow-lg shadow-blue-900/20 transition-all hover:scale-105 active:scale-95">
+                    Check Lung Health
+                </button>
+            </a>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 border-t border-slate-700 py-8 px-4 text-center text-slate-500 text-sm">
+        <strong> © 2026 Team BreathCoder </strong> 
+        <br>
+        CODEKSHETRA HealthTech AI-Based Project
+    </footer>
+</body>
+
+</html>

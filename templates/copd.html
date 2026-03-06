@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BreathCoder AI - Diagnostic Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-900 text-white min-h-screen flex flex-col">
+    <header class="bg-slate-800 border-b border-slate-700 fixed top-0 left-0 w-full z-50 hover:ring-2">
+        <nav class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 hover:cursor-pointer">
+               <a href="/" target="_blank"> <span class="text-lg md:text-xl font-bold tracking-tight text-blue-400">BreathCoder AI</span></a>
+            </div>
+
+            <ul class="flex space-x-4 md:space-x-12 font-semibold text-xs md:text-sm font-medium text-slate-300">
+                <li><a href="/" target="_blank" class="hover:text-blue-400 transition">Home</a></li>
+                <li><a href="/about" target="_blank" class="hover:text-blue-400 transition">About</a></li>
+                <li><a href="/contact" target="_blank" class="hover:text-blue-400 transition">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="flex-grow flex flex-col items-center justify-center p-4 mt-20 md:mt-16 md:p-6">
+        <div class="max-w-4xl w-full bg-slate-800 rounded-3xl p-5 md:p-10 shadow-2xl border border-slate-700">
+            <h1 class="text-2xl md:text-3xl font-bold text-center text-blue-400 mb-2">Pulmonary Diagnostic Center</h1>
+            <p class="text-center text-slate-400 mb-8 text-[10px] md:text-xs uppercase tracking-widest">Acoustic Morphological Analysis</p>
+
+            <div class="grid grid-cols-2 md:flex md:flex-nowrap justify-center gap-3 md:gap-4 mb-8 w-full">
+                <div class="flex flex-col items-center space-y-1 w-full md:max-w-[180px]">
+                    <label class="text-[10px] font-bold text-slate-500">AGE</label>
+                    <input id="age" type="number" placeholder="Age" class="w-full bg-slate-700 p-3 md:p-4 rounded-xl text-sm outline-none focus:ring-2 ring-blue-500 transition-all text-center">
+                </div>
+                <div class="flex flex-col items-center space-y-1 w-full md:max-w-[180px]">
+                    <label class="text-[10px] font-bold text-slate-500">GENDER</label>
+                    <select id="gender" class="w-full bg-slate-700 p-3 md:p-4 rounded-xl text-sm outline-none focus:ring-2 ring-blue-500 transition-all text-center">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="flex flex-col items-center space-y-1 w-full md:max-w-[180px]">
+                    <label class="text-[10px] font-bold text-slate-500">ASTHAMA</label>
+                    <select id="asthama" class="w-full bg-slate-700 p-3 md:p-4 rounded-xl text-sm outline-none focus:ring-2 ring-blue-500 transition-all text-center">
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+                <div class="flex flex-col items-center space-y-1 w-full md:max-w-[180px]">
+                    <label class="text-[10px] font-bold text-slate-500">SMOKING</label>
+                    <input id="smoking" type="number" placeholder="Years" class="w-full bg-slate-700 p-3 md:p-4 rounded-xl text-sm outline-none focus:ring-2 ring-blue-500 transition-all text-center">
+                </div>
+            </div>
+
+            <div id="timer" class="text-5xl md:text-7xl font-mono text-center mb-8 text-blue-200 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">0.00s</div>
+
+            <div class="flex flex-col sm:flex-row gap-3 md:gap-4 mb-8">
+                <button id="startBtn" class="flex-[2] bg-emerald-600/20 border-2 border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-white py-4 rounded-2xl font-black text-lg md:text-xl transition-all active:scale-95">START BREATH</button>
+                <button id="stopBtn" class="flex-[2] bg-rose-600/20 border-2 border-rose-500 text-rose-400 hover:bg-rose-500 hover:text-white py-4 rounded-2xl font-black text-lg md:text-xl transition-all active:scale-95">STOP</button>
+                <button id="resetBtn" class="flex-1 bg-slate-700/30 border-2 border-slate-600 hover:bg-slate-600 px-4 py-4 rounded-2xl font-bold transition-all">RESET</button>
+            </div>
+
+            <div id="resultsWrapper" class="hidden space-y-6 md:space-y-8 animate-in fade-in duration-700">
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                    <div class="bg-slate-900/50 p-4 rounded-2xl border border-slate-700 text-center">
+                        <p class="text-[10px] text-slate-500 uppercase font-bold">Risk</p>
+                        <p id="riskValueDisplay" class="text-2xl md:text-3xl font-black text-blue-400">0%</p>
+                    </div>
+                    <div class="bg-slate-900/50 p-4 rounded-2xl border border-slate-700 text-center flex flex-col justify-center">
+                        <p class="text-[10px] text-slate-500 uppercase font-bold">Status</p>
+                        <p id="status" class="text-sm md:text-lg font-black leading-tight">--</p>
+                    </div>
+                    <div class="bg-slate-900/50 p-4 rounded-2xl border border-slate-700 text-center">
+                        <p class="text-[10px] text-slate-500 uppercase font-bold">FEV1/FVC</p>
+                        <p id="ratioVal" class="text-xl md:text-2xl font-bold">--</p>
+                    </div>
+                    <div class="bg-slate-900/50 p-4 rounded-2xl border border-slate-700 text-center">
+                        <p class="text-[10px] text-slate-500 uppercase font-bold">FEF Flow</p>
+                        <p id="fefVal" class="text-xl md:text-2xl font-bold">--</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 p-3 md:p-6 rounded-3xl border border-slate-700">
+                    <h3 class="text-center text-[10px] font-bold text-slate-500 mb-4 uppercase tracking-tighter">Diagnostic Flow-Volume Morphology</h3>
+                    <img id="outputViz" src="" class="w-full h-auto rounded-xl shadow-2xl" alt="AI Visualization">
+                </div>
+
+                <div id="xaiExplanation" class="p-5 md:p-6 bg-blue-900/20 border border-blue-500/30 rounded-2xl">
+                    <div class="w-full">
+                        <h4 class="text-blue-400 font-bold text-[10px] md:text-sm mb-1 uppercase">Explainable AI (XAI) Insight</h4>
+                        <p id="xaiText" class="text-xs md:text-sm text-slate-300 leading-relaxed">Analysis pending...</p>
+                        <p id="clinicalNote" class="text-[10px] md:text-xs text-blue-400 mt-3 font-mono border-t border-blue-500/20 pt-2"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 border-t border-slate-700 py-6 text-center text-slate-500 text-[10px] md:text-xs">
+        <p><strong>© 2026 Team BreathCoder</strong> <br>CODEKSHETRA HealthTech AI-Based Project</p>
+    </footer>
+
+    <script>
+        // ... (Your original script remains exactly the same) ...
+        let start, interval;
+        const timerDisplay = document.getElementById('timer');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultsWrapper = document.getElementById('resultsWrapper');
+
+        startBtn.onclick = () => {
+            clearInterval(interval);
+            resultsWrapper.classList.add('hidden');
+            start = Date.now();
+            interval = setInterval(() => {
+                const elapsed = (Date.now() - start) / 1000;
+                timerDisplay.innerText = elapsed.toFixed(2) + 's';
+            }, 50);
+        };
+
+        stopBtn.onclick = async () => {
+            clearInterval(interval);
+            const duration = (Date.now() - start) / 1000;
+
+            const payload = {
+                duration: duration,
+                age: document.getElementById('age').value || 30,
+                smoking: document.getElementById('smoking').value || 0,
+                gender: document.getElementById('gender').value
+            };
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error("Server error");
+                const data = await response.json();
+                updateUI(data);
+            } catch (error) {
+                console.error("Failed:", error);
+                alert("Ensure BreathCoderWeb.py is running!");
+            }
+        };
+
+        function updateUI(data) {
+            const status = document.getElementById('status');
+            const riskValueDisplay = document.getElementById('riskValueDisplay');
+            const xaiText = document.getElementById('xaiText');
+            const clinicalNote = document.getElementById('clinicalNote');
+            const outputViz = document.getElementById('outputViz');
+
+            resultsWrapper.classList.remove('hidden');
+
+            riskValueDisplay.innerText = data.risk + '%';
+            xaiText.innerText = data.xai_text;
+            clinicalNote.innerText = "> " + data.note;
+
+            document.getElementById('ratioVal').innerText = data.ratio;
+            document.getElementById('fefVal').innerText = data.fef + " L/s";
+            outputViz.src = data.viz_url;
+
+            if (data.risk < 25) {
+                status.innerText = "HEALTHY";
+                status.className = "text-sm md:text-lg font-black text-emerald-400";
+            } else if (data.risk < 65) {
+                status.innerText = "MILD / MODERATE";
+                status.className = "text-sm md:text-lg font-black text-amber-400";
+            } else {
+                status.innerText = "OBSTRUCTIVE";
+                status.className = "text-sm md:text-lg font-black text-rose-500";
+            }
+        }
+
+        resetBtn.onclick = () => {
+            clearInterval(interval);
+            timerDisplay.innerText = '0.00s';
+            resultsWrapper.classList.add('hidden');
+            document.getElementById('age').value = '';
+            document.getElementById('smoking').value = '';
+        };
+    </script>
+</body>
+</html>

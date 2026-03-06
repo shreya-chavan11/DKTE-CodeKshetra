@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BreathCoder AI - Contact</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex flex-col">
+    <header class="bg-slate-800 border-b border-slate-700 hover:ring-2">
+        <nav class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/"><span class="text-lg md:text-xl font-bold text-blue-400">BreathCoder AI</span></a>
+            <ul class="flex space-x-3 md:space-x-6 text-[10px] sm:text-xs md:text-sm text-slate-300 font-medium">
+                <li><a href="/" class="hover:text-blue-400">Home</a></li>
+                <li><a href="/about" class="hover:text-blue-400">About</a></li>
+                <li><a href="/contact" class="hover:text-blue-400 text-blue-400">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6 md:p-8">
+        <div class="max-w-xl w-full bg-slate-800 rounded-3xl p-6 md:p-8 border border-slate-700 shadow-2xl">
+            <h2 class="text-2xl md:text-3xl font-bold text-center text-blue-400 mb-2">Get in Touch</h2>
+            <p class="text-center text-slate-400 text-xs md:text-sm mb-6">Have questions? We'd love to hear from you.</p>
+            
+            <form id="contactForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs md:text-sm text-slate-400 mb-1 ml-1">Full Name</label>
+                    <input type="text" name="name" required class="w-full bg-slate-700 p-3 md:p-4 rounded-xl outline-none ring-blue-500 focus:ring-2 transition-all text-sm md:text-base">
+                </div>
+                <div>
+                    <label class="block text-xs md:text-sm text-slate-400 mb-1 ml-1">Email Address</label>
+                    <input type="email" name="email" required class="w-full bg-slate-700 p-3 md:p-4 rounded-xl outline-none ring-blue-500 focus:ring-2 transition-all text-sm md:text-base">
+                </div>
+                <div>
+                    <label class="block text-xs md:text-sm text-slate-400 mb-1 ml-1">Message/Query</label>
+                    <textarea name="message" rows="4" required class="w-full bg-slate-700 p-3 md:p-4 rounded-xl outline-none ring-blue-500 focus:ring-2 transition-all text-sm md:text-base"></textarea>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 md:py-4 rounded-2xl font-bold text-sm md:text-base transition-all active:scale-95 shadow-lg shadow-blue-900/20">
+                    Send Message
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 border-t border-slate-700 py-6 text-center text-slate-500 text-[10px] md:text-xs">
+        <p><strong>© 2026 Team BreathCoder</strong> <br>CODEKSHETRA HealthTech AI-Based Project</p>
+    </footer>
+
+    <script>
+    document.getElementById('contactForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submitBtn');
+        const originalText = submitBtn.innerText;
+        submitBtn.innerText = "Sending...";
+        
+        const formData = {
+            name: e.target.querySelector('[name="name"]').value,
+            email: e.target.querySelector('[name="email"]').value,
+            message: e.target.querySelector('[name="message"]').value
+        };
+
+        try {
+            const response = await fetch('/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                submitBtn.innerText = "Message Sent!";
+                submitBtn.style.backgroundColor = "#22c55e"; 
+                e.target.reset();
+                setTimeout(() => {
+                    submitBtn.innerText = originalText;
+                    submitBtn.style.backgroundColor = "";
+                }, 3000);
+            } else { throw new Error(); }
+        } catch (error) {
+            submitBtn.innerText = "Error! Try Again";
+            submitBtn.style.backgroundColor = "#ef4444";
+            setTimeout(() => {
+                submitBtn.innerText = originalText;
+                submitBtn.style.backgroundColor = "";
+            }, 3000);
+        }
+    });
+    </script>
+</body>
+</html>
