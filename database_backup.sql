@@ -13,3 +13,4 @@ CREATE TABLE IF NOT EXISTS patient_diagnostics (
     fev1_fvc_ratio DECIMAL(4, 2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+

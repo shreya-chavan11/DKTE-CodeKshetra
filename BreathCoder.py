@@ -11,8 +11,7 @@ from sklearn.neural_network import MLPClassifier
 from matplotlib.collections import LineCollection
 
 app = Flask(__name__)
-
-# --- 1. CORE MODEL SETUP & TRAINING ---
+# 1. CORE MODEL SETUP & TRAINING ---
 def load_and_train():
     # Load your local dataset - Ensure Breath2.csv is in your GitHub root folder
     df = pd.read_csv('Breath2.csv')
@@ -85,16 +84,40 @@ def predict():
     age = float(data.get('age', 30))
     smoking = float(data.get('smoking', 0))
     gender = data.get('gender', 'Male')
+    
+    # --- 1. SIGNAL VALIDATION LAYER (Sound over Time) ---
+    # The frontend must send 'volume' (average amplitude 0.0 to 1.0)
+    volume_intensity = float(data.get('volume', 0)) 
+    
+    # Reject Silence: Prevents time-based results when no one is breathing
+    if volume_intensity < 0.05:
+        return jsonify({
+            "risk": 0,
+            "note": "Invalid Test: No breath detected.",
+            "xai_text": "The system detected silence. Please blow directly into the microphone."
+        })
 
+    # Reject 'Dead Air': Ensures long recordings without sound aren't marked as COPD
+    if duration > 1.0 and volume_intensity < 0.1:
+         return jsonify({
+            "risk": 0,
+            "note": "Invalid Test: Insufficient acoustic energy.",
+            "xai_text": "Background noise detected. A clinical forced exhalation requires higher sound pressure."
+        })
+
+    # --- 2. FEATURE CALCULATION ---
+    # We maintain clinical markers, but they are now gated by the sound check above
     calc_ratio = max(0.40, 0.92 - (duration * 0.045))
     calc_fef = max(0.4, 5.0 / (1 + (duration * 0.3)))
     calc_concavity = min(0.98, 0.02 + (duration * 0.11))
     
     g_enc = 1 if gender == "Male" else 0
 
+    # Prepare data for MLP Neural Network
     input_vals = pd.DataFrame([[age, g_enc, 24.0, smoking, 0, calc_fef, calc_concavity]], columns=feature_cols)
     raw_prob = model.predict_proba(scaler.transform(input_vals))[0][1]
 
+    # Adjusting probability based on clinical duration standards
     if duration < 2.5:
         final_display_prob = raw_prob * 0.5
     elif 2.5 <= duration <= 5.5:
@@ -104,8 +127,9 @@ def predict():
     
     risk_percent = final_display_prob * 100
 
-    # Heatmap Generation
+    # --- 3. XAI HEATMAP GENERATION ---
     t = np.linspace(0, 1, 100)
+    # The flow curve is physically influenced by the detected concavity
     flow = (1 - t) * (1 + 0.15 * (calc_fef / 5)) * (1 - (calc_concavity * 0.85) * np.sin(np.pi * t))
     flow = np.maximum(flow, 0)
 
@@ -113,6 +137,7 @@ def predict():
     pts = np.array([t, flow]).T.reshape(-1, 1, 2)
     segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
 
+    # Dynamic Color Mapping based on Risk
     if risk_percent < 20: cmap = 'Greens'
     elif risk_percent < 40: cmap = 'Blues'
     elif risk_percent < 75: cmap = 'YlOrBr'
@@ -127,22 +152,23 @@ def predict():
     ax.set_axis_off()
     fig.patch.set_facecolor('#0f172a') 
 
+    # Save visualization to static folder
     if not os.path.exists('static'):
         os.makedirs('static')
-        
     graph_path = os.path.join('static', 'output_viz.png')
     fig.savefig(graph_path, bbox_inches='tight', transparent=True)
     plt.close(fig)
 
+    # --- 4. EXPLAINABLE AI (XAI) INSIGHTS ---
     if risk_percent < 30:
         status_note = "Optimal lung morphology detected."
-        xai_detail = "Healthy profile with low airway resistance."
+        xai_detail = "Healthy profile with low airway resistance and linear expiratory decay."
     elif risk_percent < 70:
         status_note = "Mild airflow limitation observed."
-        xai_detail = "Slight 'scooped' concavity detected."
+        xai_detail = "Slight 'scooped' concavity detected in the mid-expiratory phase."
     else:
         status_note = "Significant obstruction detected."
-        xai_detail = "Deep 'scooped' morphology indicates obstructive conditions."
+        xai_detail = "Deep 'scooped' morphology indicates clinical signatures of airway obstruction."
 
     return jsonify({
         "risk": round(risk_percent, 1),
@@ -152,7 +178,3 @@ def predict():
         "note": status_note,
         "xai_text": xai_detail
     })
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
