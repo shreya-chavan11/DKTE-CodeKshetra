@@ -9,6 +9,7 @@ import csv
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.neural_network import MLPClassifier
 from matplotlib.collections import LineCollection
+import mysql.connector
 
 app = Flask(__name__)
 # 1. CORE MODEL SETUP & TRAINING ---
@@ -41,6 +42,12 @@ def load_and_train():
 # Initialize variables on startup
 model, scaler, feature_cols = load_and_train()
 
+connected_db = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Shreya@1106",
+            database="breathcoder_db"
+        )
 # --- 2. NAVIGATION ROUTES ---
 @app.route('/')
 def home():
