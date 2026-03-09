@@ -42,12 +42,19 @@ def load_and_train():
 # Initialize variables on startup
 model, scaler, feature_cols = load_and_train()
 
-connected_db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="Shreya@1106",
-            database="breathcoder_db"
-        )
+try:
+    import mysql.connector
+    # Attempt connection
+    db = mysql.connector.connect(
+        host="localhost", 
+        user="root", 
+        password="Shreya@1106", 
+        database="breathcoder_db"
+    )
+    print("Database connected!")
+except (ModuleNotFoundError, Exception) as e:
+    print(f"Running without database: {e}")
+    db = None 
 # --- 2. NAVIGATION ROUTES ---
 @app.route('/')
 def home():
